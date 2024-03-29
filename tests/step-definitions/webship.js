@@ -194,11 +194,10 @@ When(/^(I|we)* fill in the following:$/, function (pronoundCase, table) {
  */
 When(/^(I|we)* select "([^"]*)?" from "([^"]*)?"$/, function (pronoundCase, option, dropdownlist) {
 
-  browser.element('css selector', "select[name=" + dropdownlist + "]", function (result) {
-    if (result.status === 0) {
-      return browser.click(dropdownlist + ' option[value=' + option + ']');
-    }
-  });
+  browser.waitForElementVisible('css selector', 'select[name="' + dropdownlist + '"]')
+       .click('select[name="' + dropdownlist + '"]')
+       .click('select[name="' + dropdownlist + '"]' + ' option[value=' + option + ']')
+       .click('select[name="' + dropdownlist + '"]');
 });
 
 /**
