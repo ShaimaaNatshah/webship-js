@@ -189,15 +189,12 @@ When(/^(I|we)* fill in the following:$/, function (pronoundCase, table) {
 
 /**
  * Selects option in select field
- * Example: When I select "mercedes" from "Cars"
+ * Example: When I select "Mercedes" from "Cars"
  *
  */
 When(/^(I|we)* select "([^"]*)?" from "([^"]*)?"$/, function (pronoundCase, option, dropdownlist) {
 
-  browser.waitForElementVisible('css selector', 'select[name="' + dropdownlist + '"]')
-       .click('select[name="' + dropdownlist + '"]')
-       .click('select[name="' + dropdownlist + '"]' + ' option[value=' + option + ']')
-       .click('select[name="' + dropdownlist + '"]');
+  browser.selectOption(option, dropdownlist);
 });
 
 /**
