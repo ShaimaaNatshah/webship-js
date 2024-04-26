@@ -204,7 +204,7 @@ When(/^(I|we)* select "([^"]*)?" from "([^"]*)?"$/, function (pronoundCase, opti
  */
 When(/^(I|we)* check "([^"]*)?"$/, function (pronoundCase, item) {
 
-  browser.click(item);
+  browser.checkItem(item);
 });
 
 /**
@@ -214,7 +214,7 @@ When(/^(I|we)* check "([^"]*)?"$/, function (pronoundCase, item) {
  */
 When(/^(I|we)* uncheck "([^"]*)?"$/, function (pronoundCase, item) {
   
-  browser.click(item); 
+  browser.uncheckItem(item); 
 });
 
 /**
