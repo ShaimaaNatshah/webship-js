@@ -23,7 +23,7 @@ module.exports = {
 
   test_settings: {
     default: {
-      launch_url: 'http://localhost:8080',
+      launch_url: 'http://localhost/products/webship-js/examples',
       selenium_port: 4444,
       selenium_host: '127.0.0.1',
       silent: true,
@@ -38,7 +38,7 @@ module.exports = {
           // More info on Chromedriver: https://sites.google.com/a/chromium.org/chromedriver/
           //
           // w3c:false tells Chromedriver to run using the legacy JSONWire protocol (not required in Chrome 78)
-          w3c: false,
+          w3c: true,
           args: [
             '--headless',
             '--start-maximized',
