@@ -6,5 +6,5 @@ Feature: An example to test attach file to field
   # Scenario: Check attach file to field
   #   Given I am on "/test--when--i-attach-file-to-feild.html"
   #   When I attach the file "webshipco.png" to "#fileUpload"
-  #   When I press "Submit"
+  #   When I press "Submit" by attr
   #   Then I should see "webshipco.png"
