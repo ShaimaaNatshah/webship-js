@@ -6,7 +6,7 @@ Feature: An example to select option from drop down list
   Scenario: Check of selecting option from drop down list
     Given I am on "/test--when--i-select-option-from-dropdownlist.html"
     When I select "Saab" from "cars"
-    When I press "Check select"
+    When I press "Check select" by attr
     Then I should see "Option ( Saab ) has been selected successfully"
 
 

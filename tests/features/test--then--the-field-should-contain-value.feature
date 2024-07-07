@@ -6,6 +6,6 @@ Feature: An example to test if the field contains certain value
     Given I am on "/test--then--i-should--not--see-text-in-element.html"
     And I fill in "#uname" with "user1"
     Then the "#uname" field should contain "user1" 
-    When I press "Reset"
+    When I press "Reset" by attr
     And I fill in "#uname" with "user2"
     Then the "#uname" field should not contain "user1"
