@@ -6,13 +6,13 @@ Feature: An example of test for selecting a checkbox
     Given I am on "/test--then--the-checkbox-checked.html"
      When I check "rememberMe"
       And I check "PrivacyPolicy"
-      And I press "Register"
+      And I press "Register" by attr
      Then the checkbox "#rememberMe" is checked
       And I should see "Registration Done Successfully"
 
   Scenario: Check that the checkbox is not checked
     Given I am on "/test--then--the-checkbox-checked.html"
      When I check "PrivacyPolicy"
-      And I press "Register"
+      And I press "Register" by attr
      Then the checkbox "#rememberMe" is not checked
      Then I should see "Registration Done Successfully"
