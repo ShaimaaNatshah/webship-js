@@ -107,7 +107,29 @@ When(/^(I|we)* move backward one page$/, function (pronoundCase) {
  *
  */
 When(/^(I|we)* press "([^"]*)?"$/, function (pronoundCase, element) {
-  browser.click('[value="' + element + '"]');
+  browser.element.findByText(element).click();
+});
+
+/**
+ * Presses button with specified element
+ * Example: When I press "btn-pressID" by attr
+ * Example: When I press "btn-pressID" by attribute
+ * Example: And I press "Your full name" by "placeholder" attribute
+ * Example: And I press "Your full name" by its "placeholder" attribute
+ * Example: And I press "save-name" by "data-drupal-selector" attr
+ *
+ */
+When(/^(I|we)* press "([^"]*)?" by( its)*( "([^"]*)?")* (attribute|attr)$/, function (pronoundCase, attrValue, itsCase, attr, attrCase) {
+
+  var selector = '';
+  if (!attr){
+    selector = attrValue + ',#' + attrValue + ',.' + attrValue + ',[name=' + attrValue + "],[value=" + attrValue + "]";
+  }
+  else {
+    selector = '[' + attr + '="' + attrValue + '"]';
+  }
+
+  browser.click(selector);
 });
 
 /**
