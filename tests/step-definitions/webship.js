@@ -112,8 +112,8 @@ When(/^(I|we)* press "([^"]*)?"$/, function (pronoundCase, element) {
 
 /**
  * Presses button with specified element
- * Example: When I press "btn-pressID" by attr
- * Example: When I press "btn-pressID" by attribute
+ * Example: When I press "btn-pressid" by attr
+ * Example: When I press "btn-pressid" by attribute
  * Example: And I press "Your full name" by "placeholder" attribute
  * Example: And I press "Your full name" by its "placeholder" attribute
  * Example: And I press "save-name" by "data-drupal-selector" attr
