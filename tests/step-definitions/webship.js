@@ -107,7 +107,7 @@ When(/^(I|we)* move backward one page$/, function (pronoundCase) {
  *
  */
 When(/^(I|we)* press "([^"]*)?"$/, function (pronoundCase, element) {
-  browser.element.findByText(element).click();
+  browser.click("[value='" + element +"']");
 });
 
 /**
