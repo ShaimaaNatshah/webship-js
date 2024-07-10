@@ -143,11 +143,34 @@ When(/^(I|we)* click "([^"]*)?"$/, function (pronoundCase, item) {
 });
 
 /**
+ * Click Link with specified element
+ * Example: When I click "btn-pressid" by attr
+ * Example: When I click "btn-pressid" by attribute
+ * Example: And I click "Your full name" by "class" attribute
+ * Example: And I click "Your full name" by its "id" attribute
+ *
+ */
+When(/^(I|we)* click "([^"]*)?" by( its)*( "([^"]*)?")* (attribute|attr)$/, function (pronoundCase, attrValue, itsCase, attr, attrCase) {
+
+  var selector = '';
+  if (!attr){
+    selector = attrValue + ',#' + attrValue + ',.' + attrValue + ',[name=' + attrValue + "],[value=" + attrValue + "]";
+  }
+  else {
+    selector = '[' + attr + '="' + attrValue + '"]';
+  }
+
+  return browser.click(selector);
+
+});
+
+/**
  * Reloads current page
  * Example: When I reload page
  * Example: And I reload page
  *
  */
+
 When(/^(I|we)* reload page$/, function (pronoundCase) {
   return browser.refresh(browser.getCurrentUrl());
 });
