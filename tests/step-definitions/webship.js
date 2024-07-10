@@ -144,10 +144,10 @@ When(/^(I|we)* click "([^"]*)?"$/, function (pronoundCase, item) {
 
 /**
  * Click Link with specified element
- * Example: When I click "btn-pressid" by attr
- * Example: When I click "btn-pressid" by attribute
- * Example: And I click "Your full name" by "class" attribute
- * Example: And I click "Your full name" by its "id" attribute
+ * Example: When I click "aboutUs" by attr
+ * Example: When I click "aboutUs" by attribute
+ * Example: And I click "aboutUs" by "class" attr
+ * Example: And I click "aboutUsid" by its "id" attribute
  *
  */
 When(/^(I|we)* click "([^"]*)?" by( its)*( "([^"]*)?")* (attribute|attr)$/, function (pronoundCase, attrValue, itsCase, attr, attrCase) {
