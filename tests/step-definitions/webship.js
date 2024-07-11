@@ -192,7 +192,10 @@ When(/^(I|we)* reload the page$/, function (pronoundCase) {
  *
  */
 When(/^(I|we)* fill in "([^"]*)?" with "([^"]*)?"$/, function (pronoundCase, field, value) {
-  browser.setValue(field, value);
+  const elementField = browser.element.findByText(field);
+  browser.getAttribute(elementField, 'for', function (eleAttribute) {
+    return browser.setValue('#' + eleAttribute.value, value);
+  });
 });
 
 /**

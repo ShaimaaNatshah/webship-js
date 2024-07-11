@@ -4,8 +4,8 @@ I want to be able to fill input text with value
 
   Scenario: Check fill in input field with value
     Given I am on "/test--when--i-fill-in.html"
-     When I fill in "#uname" with "John Smith"
-     When I fill in "#pword" with "1234"
+     When I fill in "Username" with "John Smith"
+     When I fill in "Password" with "1234"
      When I press "Login" by attr
      Then I should see "You enter Username: John Smith and Password: 1234"
 
