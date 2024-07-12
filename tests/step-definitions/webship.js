@@ -208,7 +208,7 @@ When(/^(I|we)* fill in "([^"]*)?" with "([^"]*)?"$/, function (pronoundCase, fie
 When(/^(I|we)* fill in "([^"]*)?" with "([^"]*)?" by( its)*( "([^"]*)?")* (attribute|attr)$/, function (pronoundCase, attrValue, txtValue, itsCase, attr, attrCase) {
 
   const hasASpace = attrValue.indexOf(' ');
-console.log(hasASpace);
+
   var selector = '';
   if (!attr && hasASpace == -1){
     selector = attrValue + ',#' + attrValue + ',.' + attrValue + ',[name=' + attrValue + "]";
