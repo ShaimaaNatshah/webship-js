@@ -121,9 +121,14 @@ When(/^(I|we)* press "([^"]*)?"$/, function (pronoundCase, element) {
  */
 When(/^(I|we)* press "([^"]*)?" by( its)*( "([^"]*)?")* (attribute|attr)$/, function (pronoundCase, attrValue, itsCase, attr, attrCase) {
 
+  const hasASpace = attrValue.indexOf(' ');
+
   var selector = '';
-  if (!attr){
-    selector = attrValue + ',#' + attrValue + ',.' + attrValue + ',[name=' + attrValue + "],[value=" + attrValue + "]";
+  if (!attr && hasASpace == -1){
+    selector = attrValue + ',#' + attrValue + ',.' + attrValue + ',[name=' + attrValue + "]," + '[value="' + attrValue + '"],[placeholder="' + attrValue + '"]';
+  }
+  else if (!attr && hasASpace > -1){
+    selector ='[value="' + attrValue + '"],[placeholder="' + attrValue + '"]';
   }
   else {
     selector = '[' + attr + '="' + attrValue + '"]';
