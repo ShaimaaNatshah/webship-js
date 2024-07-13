@@ -6,6 +6,10 @@ jobs:
   selenium-test:
     runs-on: ubuntu-latest
 
+    env:
+      TEST_BASE_URL: http://localhost:8080
+      SELENIUM_HOST: http://selenium:4444/wd/hub
+
     services:
       selenium:
         image: selenium/standalone-chrome:latest
