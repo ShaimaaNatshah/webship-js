@@ -286,6 +286,32 @@ When(/^(I|we)* fill in "([^"]*)?" for "([^"]*)?"$/, function (pronoundCase, valu
 });
 
 /**
+ * Fill in value for input type text by its attribute
+ * Example: When I fill in "John Smith" for "uname" by attr
+ * Example: And I fill in "1234" for "pwordcss" by "class" attr
+ * Example: And I fill in "John Smith" for "Your full name" by its "placeholder" attribute
+ *
+ */
+When(/^(I|we)* fill in "([^"]*)?" for "([^"]*)?" by( its)*( "([^"]*)?")* (attribute|attr)$/, function (pronoundCase, txtValue, attrValue, itsCase, attr, attrCase) {
+
+  const hasASpace = attrValue.indexOf(' ');
+
+  var selector = '';
+  if (!attr && hasASpace == -1){
+    selector = attrValue + ',#' + attrValue + ',.' + attrValue + ',[name=' + attrValue + "]," + '[value="' + attrValue + '"],[placeholder="' + attrValue + '"]';
+  }
+  else if (!attr && hasASpace > -1){
+    selector ='[value="' + attrValue + '"],[placeholder="' + attrValue + '"]';
+  }
+  else {
+    selector = '[' + attr + '="' + attrValue + '"]';
+  }
+
+  return browser.setValue(selector, txtValue);
+
+});
+
+/**
  * Fills in form fields with provided table
  * Example: When I fill in the following:
  *              | username | webshipco |
