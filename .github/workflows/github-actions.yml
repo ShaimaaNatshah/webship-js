@@ -12,18 +12,6 @@ jobs:
       SELENIUM_HOST: http://localhost:4444/wd/hub
 
     steps:
-      - name: Install Chrome
-        run: |
-          sudo apt install libu2f-udev
-            sudo apt-get install libgbm1 libvulkan1 libnss3 libgconf-2-4 libxss1 fonts-liberation libappindicator3-1 libatk-bridge2.0-0 xdg-utils libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth
-            wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-            sudo dpkg -i google-chrome-stable_current_amd64.deb
-            sudo apt-get install -f
-            rm google-chrome-stable_current_amd64.deb
-            sudo chmod +x /usr/bin/google-chrome
-            /usr/bin/google-chrome --version
-            google-chrome --version
-
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -32,14 +20,41 @@ jobs:
         with:
           node-version: '18.x'
 
-      - name: Run Selenium Standalone server
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg2
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          google-chrome --version
+
+      - name: Install ChromeDriver
+        run: |
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
+          MAJOR_CHROME_VERSION=$(echo $CHROME_VERSION | cut -d '.' -f 1)
+          CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${MAJOR_CHROME_VERSION})
+          if [ -z "$CHROMEDRIVER_VERSION" ]; then
+            echo "Failed to obtain ChromeDriver version for Chrome version $CHROME_VERSION"
+            exit 1
+          fi
+          wget -N https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv -f chromedriver /usr/local/bin/chromedriver
+          sudo chmod +x /usr/local/bin/chromedriver
+          chromedriver --version
+
+      - name: Run Selenium Standalone Server
         run: |
           wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.4.0/selenium-server-4.4.0.jar
           nohup java -jar selenium-server-4.4.0.jar standalone > selenium.log 2>&1 &
+          sleep 15
+          cat selenium.log
 
-      - name: Wait for Selenium Standalone server to be ready
+      - name: Wait for Selenium Standalone Server to be ready
         run: |
-          timeout 15s bash -c 'until echo > /dev/tcp/localhost/4444; do sleep 1; done'
+          timeout 30s bash -c 'until echo > /dev/tcp/localhost/4444; do sleep 1; done'
 
       - name: Install dependencies
         run: yarn install
