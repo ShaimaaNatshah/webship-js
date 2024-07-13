@@ -48,7 +48,7 @@ jobs:
         run: |
           wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.4.0/selenium-server-4.4.0.jar
           java -jar selenium-server-4.4.0.jar 
-          background: true
+          
 
       - name: Install dependencies
         run: yarn install
