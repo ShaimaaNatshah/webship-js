@@ -39,6 +39,11 @@ jobs:
         with:
           node-version: '18.x'
 
+      - name: Install Java
+        run: |
+          sudo apt update
+          sudo apt install -y openjdk-11-jre openjdk-11-jre-headless openjdk-11-jdk openjdk-11-jdk-headless
+
       - name: Run Selenium Standalone server
         run: |
           wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.4.0/selenium-server-4.4.0.jar
