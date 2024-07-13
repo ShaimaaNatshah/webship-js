@@ -235,12 +235,15 @@ When(/^(I|we)* fill in "([^"]*)?" with "([^"]*)?" by( its)*( "([^"]*)?")* (attri
 });
 
 /**
- * Fills in form field with specified element
- * Example: When I fill in "username" with:
+ * Fill input type text with empty value by its Label
+ * Example: When I fill in "Username" with:
  *
  */
 When(/^(I|we)* fill in "([^"]*)?" with:$/, function (pronoundCase, field) {
-  browser.setValue(field, '');
+  const elementField = browser.element.findByText(field);
+  browser.getAttribute(elementField, 'for', function (eleAttribute) {
+    return browser.setValue('#' + eleAttribute.value, '');
+  });
 });
 
 /**
