@@ -53,7 +53,7 @@ jobs:
       - name: Start virtual server
         run: |
           export NODE_OPTIONS=--openssl-legacy-provider
-          yarn start
+          yarn start &
 
       - name: Run tests
         run: yarn test
