@@ -23,28 +23,29 @@ jobs:
       - name: Install Chrome
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget unzip
-          CHROME_VERSION="115.0.5790.110-1"
-          wget https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb
-          sudo dpkg -i google-chrome-stable_${CHROME_VERSION}_amd64.deb
-          sudo apt-get install -f
+          sudo apt-get install -y wget gnupg2
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
 
       - name: Install ChromeDriver
         run: |
-          CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
+          CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION%%.*})
           wget -N https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
           unzip chromedriver_linux64.zip
           sudo mv -f chromedriver /usr/local/bin/chromedriver
           sudo chmod +x /usr/local/bin/chromedriver
 
-      - name: Run Selenium Standalone server
+      - name: Run Selenium Standalone Server
         run: |
           wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.4.0/selenium-server-4.4.0.jar
           nohup java -jar selenium-server-4.4.0.jar standalone > selenium.log 2>&1 &
 
-      - name: Wait for Selenium Standalone server to be ready
+      - name: Wait for Selenium Standalone Server to be ready
         run: |
-          timeout 15s bash -c 'until echo > /dev/tcp/localhost/4444; do sleep 1; done'
+          timeout 30s bash -c 'until echo > /dev/tcp/localhost/4444; do sleep 1; done'
 
       - name: Install dependencies
         run: yarn install
