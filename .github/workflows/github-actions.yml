@@ -48,12 +48,12 @@ jobs:
         run: yarn install
 
       - name: Configure nightwatch.conf.js for GitHub
-        run: node webship-init -ci github -os linux -b chrome
+        run: node webship-init -ci circleci -os linux -b chrome
 
       - name: Start virtual server
         run: |
           export NODE_OPTIONS=--openssl-legacy-provider
-          yarn start &
+          yarn start
 
       - name: Run tests
         run: yarn test
