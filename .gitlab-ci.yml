@@ -7,29 +7,46 @@ stages:
 check:
   stage: setup
   script:
-    # Install Node.js and yarn
-    - apt-get update -qy
-    - apt-get install -y nodejs yarn
+    # Install/Update Google Chrome browser
+    - sudo apt install libu2f-udev
+    - sudo apt-get install libappindicator1 fonts-liberation libgbm1 libgtk-3-0 xdg-utils
+    - export CHROME_BIN=/usr/bin/google-chrome
+    - CHROME_VERSION="115.0.5790.110-1"
+    - wget https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb
+    - sudo dpkg -i google-chrome-stable_${CHROME_VERSION}_amd64.deb
+    - rm google-chrome-stable_${CHROME_VERSION}_amd64.deb
 
-    # Install Google Chrome and Chromedriver
-    - apt-get install -y wget unzip
-    - wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    - dpkg -i google-chrome*.deb
-    - apt-get -f install -y
-    - CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-    - wget -q https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip
+    # Install/Update Chrome Driver
+    - CHROME_DRIVER_VERSION=114.0.5735.90;
+    - echo $CHROME_DRIVER_VERSION;
+    - wget http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip
     - unzip chromedriver_linux64.zip
-    - mv chromedriver /usr/local/bin/
-    - chmod +x /usr/local/bin/chromedriver
+    - sudo chmod +x chromedriver
+    - sudo mv -f chromedriver /usr/bin/
+    - rm chromedriver_linux64.zip
 
-    # Install dependencies and run Webpack
+    # Checkout repository
+    - actions/checkout@v3
+
+    # Set up Node.js
+    - actions/setup-node@v3
+
+    # Install Java
+    - sudo apt update
+    - sudo apt install -y openjdk-11-jre openjdk-11-jre-headless openjdk-11-jdk openjdk-11-jdk-headless
+    
+    # Install dependencies
     - yarn install
-    - yarn start
-    - yarn test
+  
+    # Configure nightwatch.conf.js
+    - node webship-init -ci circleci -os linux -b chrome
 
-    # Show the logs for the GitLab Selenium Server service
-    - mkdir -p selenium/ && curl -s http://localhost:8080/logs.tar.gz | tar -xvzf - -C selenium/
-    - mkdir -p selenium/ && curl http://localhost:8080/server-log --output selenium/server-log.txt
+    # Start virtual server
+    - export NODE_OPTIONS=--openssl-legacy-provider
+    - yarn start &
+
+    # Run tests
+    - yarn test
   artifacts:
     when: always
     paths:
