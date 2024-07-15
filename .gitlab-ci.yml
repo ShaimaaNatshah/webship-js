@@ -35,6 +35,10 @@ check:
     - sudo apt update
     - sudo apt install -y openjdk-11-jre openjdk-11-jre-headless openjdk-11-jdk openjdk-11-jdk-headless
     
+    # Run Selenium Standalone server
+    - wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.4.0/selenium-server-4.4.0.jar
+    - nohup java -jar selenium-server-4.4.0.jar standalone > selenium.log 2>&1 & 
+         
     # Install dependencies
     - yarn install
   
@@ -47,11 +51,4 @@ check:
 
     # Run tests
     - yarn test
-  artifacts:
-    when: always
-    paths:
-      - selenium/
-  variables:
-    SELENIUM_REMOTE_URL: http://localhost:8080
-    GITLAB_TARGET_SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
-
+  
