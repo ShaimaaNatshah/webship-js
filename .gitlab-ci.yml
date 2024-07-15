@@ -8,7 +8,6 @@ check:
   stage: setup
   script:
     # Install/Update Google Chrome browser
-    - sudo apt install libu2f-udev
     - sudo apt-get install libappindicator1 fonts-liberation libgbm1 libgtk-3-0 xdg-utils
     - export CHROME_BIN=/usr/bin/google-chrome
     - CHROME_VERSION="115.0.5790.110-1"
@@ -52,3 +51,10 @@ check:
     # Run tests
     - yarn test
   
+artifacts:
+    when: always
+    paths:
+      - selenium/
+  variables:
+    SELENIUM_REMOTE_URL: http://localhost:8080
+    GITLAB_TARGET_SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
