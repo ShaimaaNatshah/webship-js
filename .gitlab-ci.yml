@@ -9,6 +9,14 @@ check:
   script:
     - apt-get update -qy
     - apt-get install -y wget unzip gnupg2
+
+    # Add AdoptOpenJDK repository and install OpenJDK 11
+    - wget -qO- https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
+    - add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
+    - apt-get update -qy
+    - apt-get install -y adoptopenjdk-11-hotspot
+
+    # Install Google Chrome and Chromedriver
     - wget -qO- https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
     - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
     - apt-get update -qy
@@ -40,5 +48,4 @@ test:
     paths:
       - test-results/
   variables:
-    SELENIUM_REMOTE_URL: http://localhost:8080
-    GITLAB_TARGET_SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
+    SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
