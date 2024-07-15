@@ -15,11 +15,14 @@ setup:
     - apt-get update -qy
     - apt-get install -y wget unzip gnupg2 libu2f-udev libappindicator1 fonts-liberation libgbm1 libgtk-3-0 xdg-utils
 
+    # Install dependencies for Google Chrome
+    - apt-get install -y libasound2 libnspr4 libnss3 libvulkan1
+
     # Install Google Chrome
     - export CHROME_BIN=/usr/bin/google-chrome
     - CHROME_VERSION="115.0.5790.110-1"
     - wget https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb
-    - dpkg -i google-chrome-stable_${CHROME_VERSION}_amd64.deb
+    - dpkg -i google-chrome-stable_${CHROME_VERSION}_amd64.deb || apt-get -f install -y
     - rm google-chrome-stable_${CHROME_VERSION}_amd64.deb
 
     # Install Chrome Driver
