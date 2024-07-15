@@ -33,11 +33,11 @@ setup:
     - mv -f chromedriver /usr/bin/
     - rm chromedriver_linux64.zip
 
-    # Install AdoptOpenJDK 11
-    - wget -qO /usr/share/keyrings/adoptopenjdk.asc https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
-    - echo "deb [signed-by=/usr/share/keyrings/adoptopenjdk.asc] https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ focal main" | tee /etc/apt/sources.list.d/adoptopenjdk.list
+    # Install OpenJDK 11 from Eclipse Adoptium
+    - wget -qO /usr/share/keyrings/adoptium.asc https://adoptium.net/keys/adoptium.asc
+    - echo "deb [signed-by=/usr/share/keyrings/adoptium.asc] https://adoptium.net/deb/ focal main" | tee /etc/apt/sources.list.d/adoptium.list
     - apt-get update -qy
-    - apt-get install -y adoptopenjdk-11-hotspot
+    - apt-get install -y temurin-11-jdk
 
     # Run Selenium Standalone server
     - wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.4.0/selenium-server-4.4.0.jar
