@@ -19,7 +19,10 @@ check:
     - unzip chromedriver_linux64.zip
     - mv chromedriver /usr/local/bin/
     - chmod +x /usr/local/bin/chromedriver
+
     - yarn install
+    - yarn global add selenium-standalone
+    - selenium-standalone install
   artifacts:
     when: always
     paths:
@@ -28,12 +31,13 @@ check:
 test:
   stage: test
   script:
+    - selenium-standalone start &
     - yarn start &
+    - sleep 5 # Give Selenium some time to start
     - yarn test
   artifacts:
     when: always
     paths:
       - test-results/
   variables:
-    SELENIUM_REMOTE_URL: http://localhost:8080
-    GITLAB_TARGET_SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
+    SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
