@@ -19,8 +19,11 @@ check:
     - unzip chromedriver_linux64.zip
     - mv chromedriver /usr/local/bin/
     - chmod +x /usr/local/bin/chromedriver
-
+    
+    - apt-get install -y openjdk-11-jre openjdk-11-jre-headless openjdk-11-jdk openjdk-11-jdk-headless
     - yarn install
+    - yarn global add selenium-standalone
+    - selenium-standalone install
   artifacts:
     when: always
     paths:
@@ -38,5 +41,4 @@ test:
     paths:
       - test-results/
   variables:
-    SELENIUM_REMOTE_URL: http://localhost:8080
-    GITLAB_TARGET_SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
+    SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
