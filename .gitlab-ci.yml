@@ -21,8 +21,6 @@ check:
     - chmod +x /usr/local/bin/chromedriver
 
     - yarn install
-    - yarn global add selenium-standalone
-    - selenium-standalone install
   artifacts:
     when: always
     paths:
@@ -40,4 +38,5 @@ test:
     paths:
       - test-results/
   variables:
-    SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
+    SELENIUM_REMOTE_URL: http://localhost:8080
+    GITLAB_TARGET_SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
