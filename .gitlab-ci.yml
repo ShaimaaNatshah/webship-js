@@ -7,49 +7,33 @@ stages:
 check:
   stage: setup
   script:
-    # Install/Update Google Chrome browser
-    - apt-get install -y wget unzip
-    - wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    - dpkg -i google-chrome*.deb
-    - apt-get -f install -y
+    - apt-get update -qy
+    - apt-get install -y wget unzip gnupg2
+    - wget -qO- https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+    - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
+    - apt-get update -qy
+    - apt-get install -y google-chrome-stable
+
     - CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
     - wget -q https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip
     - unzip chromedriver_linux64.zip
     - mv chromedriver /usr/local/bin/
     - chmod +x /usr/local/bin/chromedriver
-
-    # Install/Update Chrome Driver
-    - CHROME_DRIVER_VERSION=114.0.5735.90;
-    - echo $CHROME_DRIVER_VERSION;
-    - wget http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip
-    - unzip chromedriver_linux64.zip
-    - sudo chmod +x chromedriver
-    - sudo mv -f chromedriver /usr/bin/
-    - rm chromedriver_linux64.zip
-
-    # Checkout repository
-    - actions/checkout@v3
-
-    # Set up Node.js
-    - actions/setup-node@v3
-
-    # Install Java
-    - sudo apt update
-    - sudo apt install -y openjdk-11-jre openjdk-11-jre-headless openjdk-11-jdk openjdk-11-jdk-headless
-    
-    # Run Selenium Standalone server
-    - wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.4.0/selenium-server-4.4.0.jar
-    - nohup java -jar selenium-server-4.4.0.jar standalone > selenium.log 2>&1 & 
-         
-    # Install dependencies
     - yarn install
-  
-    # Configure nightwatch.conf.js
-    - node webship-init -ci circleci -os linux -b chrome
+  artifacts:
+    when: always
+    paths:
+      - node_modules/
 
-    # Start virtual server
-    - export NODE_OPTIONS=--openssl-legacy-provider
+test:
+  stage: test
+  script:
     - yarn start &
-
-    # Run tests
     - yarn test
+  artifacts:
+    when: always
+    paths:
+      - test-results/
+  variables:
+    SELENIUM_REMOTE_URL: http://localhost:8080
+    GITLAB_TARGET_SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
