@@ -10,7 +10,7 @@ before_script:
   - apt-get update
   - apt-get install -y wget unzip libu2f-udev libappindicator1 fonts-liberation libgbm1 libgtk-3-0 xdg-utils libasound2 libnspr4 libnss3 libvulkan1
   - apt-get install -y openjdk-17-jre openjdk-17-jdk
-  - curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -  # Setup Node.js repository
+  - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -  # Setup Node.js repository
   - apt-get install -y nodejs  # Install Node.js and npm
   - npm install --global yarn  # Install Yarn globally
   - export CHROME_BIN=/usr/bin/google-chrome
