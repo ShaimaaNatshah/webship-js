@@ -2,77 +2,40 @@ image: node:18
 
 stages:
   - setup
-  - build
   - test
 
 variables:
   TEST_BASE_URL: http://localhost:8080
   SELENIUM_HOST: http://localhost:4444/wd/hub
 
-setup:
+before_script:
+  - apt-get update && apt-get install -y libu2f-udev libappindicator1 fonts-liberation libgbm1 libgtk-3-0 xdg-utils
+  - export CHROME_BIN=/usr/bin/google-chrome
+  - CHROME_VERSION="115.0.5790.110-1"
+  - wget https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb
+  - dpkg -i google-chrome-stable_${CHROME_VERSION}_amd64.deb
+  - rm google-chrome-stable_${CHROME_VERSION}_amd64.deb
+  - CHROME_DRIVER_VERSION=114.0.5735.90
+  - wget http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip
+  - unzip chromedriver_linux64.zip
+  - chmod +x chromedriver
+  - mv -f chromedriver /usr/bin/
+  - rm chromedriver_linux64.zip
+  - apt-get update && apt-get install -y openjdk-11-jre openjdk-11-jre-headless openjdk-11-jdk openjdk-11-jdk-headless
+  - wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.4.0/selenium-server-4.4.0.jar
+  - nohup java -jar selenium-server-4.4.0.jar standalone > selenium.log 2>&1 &
+
+install_dependencies:
   stage: setup
   script:
-    - echo "Updating package list..."
-    - apt-get update -qy
-    - echo "Installing essential packages..."
-    - apt-get install -y wget unzip gnupg2 libu2f-udev libappindicator1 fonts-liberation libgbm1 libgtk-3-0 xdg-utils
-
-    # Install dependencies for Google Chrome
-    - echo "Installing Google Chrome dependencies..."
-    - apt-get install -y libasound2 libnspr4 libnss3 libvulkan1
-
-    # Install Google Chrome
-    - echo "Installing Google Chrome..."
-    - export CHROME_BIN=/usr/bin/google-chrome
-    - CHROME_VERSION="115.0.5790.110-1"
-    - wget https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb
-    - dpkg -i google-chrome-stable_${CHROME_VERSION}_amd64.deb || apt-get -f install -y
-    - rm google-chrome-stable_${CHROME_VERSION}_amd64.deb
-
-    # Install Chrome Driver
-    - echo "Installing ChromeDriver..."
-    - CHROME_DRIVER_VERSION=114.0.5735.90
-    - wget http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip
-    - unzip chromedriver_linux64.zip
-    - chmod +x chromedriver
-    - mv -f chromedriver /usr/bin/
-    - rm chromedriver_linux64.zip
-
-    # Install OpenJDK 11 from Eclipse Adoptium
-    - echo "Adding Adoptium GPG key..."
-    - wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor > /usr/share/keyrings/adoptium-archive-keyring.gpg
-    - echo "deb [signed-by=/usr/share/keyrings/adoptium-archive-keyring.gpg] https://packages.adoptium.net/artifactory/deb focal main" | tee /etc/apt/sources.list.d/adoptium.list
-    - apt-get update -qy
-    - echo "Installing Temurin 11 JDK..."
-    - apt-get install -y temurin-11-jdk
-
-    # Run Selenium Standalone server
-    - echo "Downloading Selenium Standalone server..."
-    - wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.4.0/selenium-server-4.4.0.jar
-    - echo "Starting Selenium Standalone server..."
-    - nohup java -jar selenium-server-4.4.0.jar standalone > selenium.log 2>&1 &
-
-build:
-  stage: build
-  script:
-    - echo "Installing Node.js dependencies..."
     - yarn install
-    - yarn add webpack webpack-cli nightwatch cucumber-html-reporter
-
+    - node webship-init -ci circleci -os linux -b chrome
+    - export NODE_OPTIONS=--openssl-legacy-provider
+    - yarn start &
+    
 test:
   stage: test
   script:
-    - echo "Starting virtual server..."
-    - export NODE_OPTIONS=--openssl-legacy-provider
-    - yarn run devServer &
-    - sleep 10 # Wait for the server to start
-    - echo "Running tests..."
     - yarn test
-    - echo "Checking if cucumber_report.json is generated..."
-    - if [ -f tests/reports/cucumber_report.json ]; then echo "Report found"; else echo "Report not found"; fi
-  artifacts:
-    paths:
-      - tests/reports/
-  after_script:
-    - echo "Generating reports..."
-    - node generate-reports.js
+  dependencies:
+    - install_dependencies
