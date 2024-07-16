@@ -1,44 +1,50 @@
-stages:
-  - setup
-  - test
+image: cimg/base:stable-20.04
+
+services:
+  - name: selenium/standalone-chrome
+    alias: selenium
 
 variables:
-  TEST_BASE_URL: http://localhost:8080
-  SELENIUM_HOST: http://localhost:4444/wd/hub
+  CHROME_VERSION: "115.0.5790.110-1"
+  CHROME_DRIVER_VERSION: "114.0.5735.90"
+  NODE_OPTIONS: "--openssl-legacy-provider"
 
 before_script:
+  - apt-get update -qq
+  - apt-get upgrade -qqy
+  - apt-get install -yqq vim links lynx git diffutils htop curl wget p7zip-full unzip zip sed gcc g++ make libfreetype6-dev libaio1 libaio-dev libonig-dev libpng-dev
+  - apt-get install -yqq xvfb libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 libnss3
+  - curl -sL https://deb.nodesource.com/setup_18.x | bash -
+  - apt-get install -y nodejs
+  - npm install -g yarn
   - apt-get update
-  - apt-get install -y wget unzip libu2f-udev libappindicator1 fonts-liberation libgbm1 libgtk-3-0 xdg-utils libasound2 libnspr4 libnss3 libvulkan1
-  - apt-get install -y openjdk-17-jre openjdk-17-jdk
-  - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -  # Setup Node.js repository
-  - apt-get install -y nodejs  # Install Node.js and npm
-  - npm install --global yarn  # Install Yarn globally
-  - export CHROME_BIN=/usr/bin/google-chrome
-  - CHROME_VERSION="115.0.5790.110-1"
+  - apt-get install -y openjdk-11-jre openjdk-11-jre-headless openjdk-11-jdk openjdk-11-jdk-headless
+  - apt-get install -y libu2f-udev
+  - apt-get install -y libappindicator1 fonts-liberation libgbm1 libgtk-3-0 xdg-utils
   - wget https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb
-  - dpkg -i google-chrome-stable_${CHROME_VERSION}_amd64.deb || true
-  - apt-get install -f -y
+  - dpkg -i google-chrome-stable_${CHROME_VERSION}_amd64.deb
   - rm google-chrome-stable_${CHROME_VERSION}_amd64.deb
-  - CHROME_DRIVER_VERSION=114.0.5735.90
-  - wget http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip
+  - wget http://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip
   - unzip chromedriver_linux64.zip
   - chmod +x chromedriver
-  - mv -f chromedriver /usr/bin/
+  - mv chromedriver /usr/bin/
   - rm chromedriver_linux64.zip
-  - wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.4.0/selenium-server-4.4.0.jar
-  - nohup java -jar selenium-server-4.4.0.jar standalone > selenium.log 2>&1 &
+  - if [ ! -f /home/gitlab/selenium-server-4.4.0.jar ]; then wget -O /home/gitlab/selenium-server-4.4.0.jar https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.4.0/selenium-server-4.4.0.jar; fi
 
-install_dependencies:
-  stage: setup
+stages:
+  - build
+  - test
+
+webship-js-build:
+  stage: build
   script:
+    - Xvfb :99 -screen 0 1600x1200x24 > /dev/null 2>&1 &
+    - java -jar /home/gitlab/selenium-server-4.4.0.jar standalone &
     - yarn install
-    - node webship-init -ci circleci -os linux -b chrome
-    - export NODE_OPTIONS=--openssl-legacy-provider
+    - node webship-init -ci gitlab -os linux -b chrome
     - yarn start &
-    
-test:
-  stage: test
-  script:
     - yarn test
-  dependencies:
-    - install_dependencies
+  only:
+    refs:
+      - tags
+      - branches
