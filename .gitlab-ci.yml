@@ -58,13 +58,22 @@ build:
   script:
     - echo "Installing Node.js dependencies..."
     - yarn install
+    - yarn add webpack webpack-cli nightwatch cucumber-html-reporter
 
 test:
   stage: test
   script:
     - echo "Starting virtual server..."
     - export NODE_OPTIONS=--openssl-legacy-provider
-    - yarn start &
+    - yarn run devServer &
     - sleep 10 # Wait for the server to start
     - echo "Running tests..."
     - yarn test
+    - echo "Checking if cucumber_report.json is generated..."
+    - if [ -f tests/reports/cucumber_report.json ]; then echo "Report found"; else echo "Report not found"; fi
+  artifacts:
+    paths:
+      - tests/reports/
+  after_script:
+    - echo "Generating reports..."
+    - node generate-reports.js
