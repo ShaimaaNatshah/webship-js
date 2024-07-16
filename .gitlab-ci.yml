@@ -57,7 +57,11 @@ test:
   stage: test
   script:
     - yarn install
-    - yarn start
+    - yarn global add selenium-standalone
+    - selenium-standalone install
+    - selenium-standalone start &
+    - yarn start &
+    - sleep 5 # Give Selenium some time to start
     - yarn test
 
     # Show the logs for the GitLab Selenium Server service
