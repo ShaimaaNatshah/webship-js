@@ -72,6 +72,8 @@ test:
     paths:
       - tests/reports/
   after_script:
+    - echo "Checking if cucumber_report.json is generated..."
+    - if [ -f tests/reports/cucumber_report.json ]; then echo "Report found"; else echo "Report not found"; fi
     - echo "Generating reports..."
     - yarn add cucumber-html-reporter
     - node generate-reports.js
