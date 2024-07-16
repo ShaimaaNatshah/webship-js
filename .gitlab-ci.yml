@@ -8,13 +8,13 @@ variables:
 
 before_script:
   - apt-get update
-  - apt-get install -y wget unzip openjdk-11-jre openjdk-11-jre-headless openjdk-11-jdk openjdk-11-jdk-headless
-  - apt-get install -y libu2f-udev libappindicator1 fonts-liberation libgbm1 libgtk-3-0 xdg-utils libasound2 libnspr4 libnss3 libvulkan1
+  - apt-get install -y wget unzip libu2f-udev libappindicator1 fonts-liberation libgbm1 libgtk-3-0 xdg-utils libasound2 libnspr4 libnss3 libvulkan1
+  - apt-get install -y openjdk-17-jre openjdk-17-jdk
   - export CHROME_BIN=/usr/bin/google-chrome
   - CHROME_VERSION="115.0.5790.110-1"
   - wget https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb
-  - dpkg -i google-chrome-stable_${CHROME_VERSION}_amd64.deb || true  # Install package, ignore errors
-  - apt-get install -f -y  # Fix missing dependencies
+  - dpkg -i google-chrome-stable_${CHROME_VERSION}_amd64.deb || true
+  - apt-get install -f -y
   - rm google-chrome-stable_${CHROME_VERSION}_amd64.deb
   - CHROME_DRIVER_VERSION=114.0.5735.90
   - wget http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip
