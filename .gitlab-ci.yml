@@ -12,7 +12,6 @@ variables:
 setup:
   stage: setup
   script:
-    # Update and install necessary packages
     - echo "Updating package list..."
     - apt-get update -qy
     - echo "Installing essential packages..."
@@ -69,3 +68,10 @@ test:
     - sleep 10 # Wait for the server to start
     - echo "Running tests..."
     - yarn test
+  artifacts:
+    paths:
+      - tests/reports/
+  after_script:
+    - echo "Generating reports..."
+    - yarn add cucumber-html-reporter
+    - node generate-reports.js
