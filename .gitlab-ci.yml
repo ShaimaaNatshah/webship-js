@@ -56,6 +56,7 @@ setup:
 test:
   stage: test
   script:
+    - apt-get install -y openjdk-11-jdk
     - yarn install
     - yarn global add selenium-standalone
     - selenium-standalone install
