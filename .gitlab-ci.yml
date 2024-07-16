@@ -59,6 +59,11 @@ test:
     - yarn install
     - yarn start
     - yarn test
+
+    # Show the logs for the GitLab Selenium Server service
+    - mkdir -p selenium/ && curl -s http://localhost:8080/logs.tar.gz | tar -xvzf - -C selenium/
+    - mkdir -p selenium/ && curl http://localhost:8080/server-log --output selenium/server-log.txt
+
   artifacts:
     when: always
     paths:
