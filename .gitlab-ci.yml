@@ -8,11 +8,12 @@ variables:
 
 before_script:
   - apt-get update
-  - apt-get install -y libu2f-udev libappindicator1 fonts-liberation libgbm1 libgtk-3-0 xdg-utils
+  - apt-get install -y wget unzip openjdk-11-jre openjdk-11-jre-headless openjdk-11-jdk openjdk-11-jdk-headless
+  - apt-get install -y libu2f-udev libappindicator1 fonts-liberation libgbm1 libgtk-3-0 xdg-utils libasound2 libnspr4 libnss3 libvulkan1
   - export CHROME_BIN=/usr/bin/google-chrome
   - CHROME_VERSION="115.0.5790.110-1"
   - wget https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb
-  - dpkg -i google-chrome-stable_${CHROME_VERSION}_amd64.deb
+  - dpkg -i google-chrome-stable_${CHROME_VERSION}_amd64.deb || true  # Install package, ignore errors
   - apt-get install -f -y  # Fix missing dependencies
   - rm google-chrome-stable_${CHROME_VERSION}_amd64.deb
   - CHROME_DRIVER_VERSION=114.0.5735.90
@@ -21,7 +22,6 @@ before_script:
   - chmod +x chromedriver
   - mv -f chromedriver /usr/bin/
   - rm chromedriver_linux64.zip
-  - apt-get update && apt-get install -y openjdk-11-jre openjdk-11-jre-headless openjdk-11-jdk openjdk-11-jdk-headless
   - wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.4.0/selenium-server-4.4.0.jar
   - nohup java -jar selenium-server-4.4.0.jar standalone > selenium.log 2>&1 &
 
