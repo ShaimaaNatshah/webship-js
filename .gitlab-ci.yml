@@ -77,3 +77,8 @@ test:
     - echo "Generating reports..."
     - yarn add cucumber-html-reporter
     - node generate-reports.js
+
+install_dependencies:
+  script:
+    - echo "Installing Nightwatch and Cucumber HTML Reporter..."
+    - yarn add nightwatch cucumber-html-reporter
