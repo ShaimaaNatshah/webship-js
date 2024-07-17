@@ -1,5 +1,9 @@
 image: cimg/base:stable-20.04
 
+services:
+  - name: selenium/standalone-chrome
+    alias: selenium
+
 variables:
   CHROME_VERSION: "115.0.5790.110-1"
   CHROME_DRIVER_VERSION: "114.0.5735.90"
