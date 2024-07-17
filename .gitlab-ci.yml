@@ -46,7 +46,7 @@ webship-js-build:
     - curl -s http://localhost:4444/wd/hub/status || { echo "Selenium server is not running"; exit 1; }
     - echo "Selenium server is running"
     - yarn install
-    - node webship-init -ci gitlab -os linux -b chrome
+    - node webship-init -ci circleci -os linux -b chrome
     - yarn start &
     - yarn test
   only:
