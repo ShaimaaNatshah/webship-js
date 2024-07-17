@@ -54,8 +54,4 @@ webship-js-build:
       - tags
       - branches
 
-  after_script:
-  - ls -la
-  - ls -la /home/gitlab
-  - cat selenium.log
-  - curl -s http://localhost:4444/wd/hub/status # Check Selenium status after test
+  
