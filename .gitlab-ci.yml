@@ -43,7 +43,4 @@ webship-js-build:
     - export NODE_OPTIONS=--openssl-legacy-provider
     - yarn start
     - yarn test
-  only:
-    refs:
-      - tags
-      - branches
+  
