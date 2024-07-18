@@ -41,6 +41,10 @@ webship-js-build:
     - yarn install
     - node webship-init -ci circleci -os linux -b chrome
     - export NODE_OPTIONS=--openssl-legacy-provider
-    - yarn start
+    - yarn start &
     - yarn test
-  
+
+  only:
+    refs:
+      - tags
+      - branches
