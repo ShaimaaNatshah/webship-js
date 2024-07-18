@@ -40,7 +40,8 @@ webship-js-build:
     - Xvfb :99 -screen 0 1600x1200x24 > /dev/null 2>&1 &
     - yarn install
     - node webship-init -ci circleci -os linux -b chrome
-    - yarn start &
+    - export NODE_OPTIONS=--openssl-legacy-provider
+    - yarn start
     - yarn test
   only:
     refs:
