@@ -9,6 +9,9 @@ pipelines:
         caches:
           - node
         script:
+          - export CHROME_VERSION="115.0.5790.110-1"
+          - export CHROME_DRIVER_VERSION="114.0.5735.90"
+          - export NODE_OPTIONS="--openssl-legacy-provider"
           - sudo apt-get update -qq
           - sudo apt-get upgrade -qqy
           - sudo apt-get install -yqq vim links lynx git diffutils htop curl wget p7zip-full unzip zip sed gcc g++ make libfreetype6-dev libaio1 libaio-dev libonig-dev libpng-dev
